@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="popup noselect">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="robots" content="noindex, nofollow, noarchive">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NetFoodCafe Ραδιόφωνο : Player</title>
+	<link rel="stylesheet" href="http://netfoodcafe.com/assets/css/styles.css" type="text/css" media="all">
+
+	<script src="http://netfoodcafe.com/assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+	<script src="http://netfoodcafe.com/assets/js/jquery-migrate-3.0.0.min.js" type="text/javascript"></script>
+	<script src="http://netfoodcafe.com/assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="http://netfoodcafe.com/assets/js/jquery-effects.js" type="text/javascript"></script>
+	<script type="text/javascript">jQuery(document).ready(function ($)
+		{
+			$("input.pp").on("click", function ()
+			{
+				toggle_fs();
+			});
+			function toggle_fs()
+			{
+				if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+					if (document.documentElement.requestFullScreen) {
+						document.documentElement.requestFullScreen();
+					} else if (document.documentElement.mozRequestFullScreen) {
+						document.documentElement.mozRequestFullScreen();
+					} else if (document.documentElement.webkitRequestFullScreen) {
+						document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+					}
+				} else {
+					if (document.cancelFullScreen) {
+						document.cancelFullScreen();
+					} else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					} else if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen();
+					}
+				}
+			}
+
+			var audio = $("audio")[0];
+			var zero_volume = 0.00;
+			var default_volume = 1.00;
+			var step_volume = 0.05;
+			var audio_volume = zero_volume;
+			$(".volume-txt").hide();
+			$(".volume-txt").text("Volume: 0.00").fadeIn(1000);
+			function play_audio()
+			{
+				audio.volume = zero_volume;
+				$(".play-pause").addClass("playing");
+				$(".play-pause span").removeClass("play").addClass("pause").addClass("playing");
+				audio.play();
+				$(".audio").animate({volume: default_volume}, {
+					duration: 2000, step: function ()
+					{
+						var audio_volume = audio.volume.toFixed(2);
+						$(".volume-txt").text("Volume: " + audio_volume);
+					}
+				});
+			}
+
+			if (audio.paused) {
+				play_audio();
+			}
+			$(".play-pause").on("click", function ()
+			{
+				if (audio.paused) {
+					play_audio();
+				} else {
+					$(".play-pause").removeClass("playing");
+					$(".play-pause span").removeClass("pause").removeClass("playing").addClass("play");
+					$(".audio").animate({volume: zero_volume}, {
+						duration: 2000, step: function ()
+						{
+							var audio_volume = audio.volume.toFixed(2);
+							$(".volume-txt").text("Volume: " + audio_volume);
+							if (audio_volume == zero_volume) {
+								audio.pause();
+							}
+						}
+					});
+				}
+			});
+			$(".vol-up").on("click", function ()
+			{
+				if (audio.volume >= 1) return false;
+				audio.volume += step_volume;
+
+				$(".volume-txt").text("Volume: " + audio.volume.toFixed(2));
+				return false;
+			});
+			$(".vol-down").on("click", function ()
+			{
+
+				audio.volume -= step_volume;
+
+				$(".volume-txt").text("Volume: " + audio.volume.toFixed(2));
+				return false;
+			});
+		});
+		jQuery("#eoytvid-popup").hide();
+		var tag = document.createElement("script");
+		tag.src = "https://www.youtube.com/player_api";
+		var firstScriptTag = document.getElementsByTagName("script")[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		var player;
+		function onYouTubePlayerAPIReady()
+		{
+			player = new YT.Player("eoytvid-popup", {
+				playerVars: {
+					enablejsapi: 1,
+					autoplay: 1,
+					autohide: 2,
+					loop: 1,
+					controls: 0,
+					disablekb: 0,
+					showinfo: 0,
+					rel: 0,
+					fs: 0,
+					playlist: "SWT0xMiTRwI",
+					hl: "el",
+					iv_load_policy: 3,
+					start: 1,
+					origin: "netfoodcafe.com",
+					cc_load_policy: 0
+				},
+				width: "auto",
+				height: "auto",
+				videoId: "SWT0xMiTRwI",
+				events: {"onReady": onPlayerReady, "onStateChange": onPlayerStateChange}
+			});
+		}
+		function onPlayerReady(event)
+		{
+			player.pauseVideo();
+			player.mute();
+			player.setPlaybackQuality("hd1080");
+			setTimeout(function ()
+			{
+				jQuery(".eovid-popup").css("display", "block");
+				jQuery("#eoytvid-popup").fadeTo(0, 0.0);
+				player.playVideo();
+			}, 2000);
+		}
+		var done = false;
+		function onPlayerStateChange(event)
+		{
+			if (event.data == YT.PlayerState.PLAYING) {
+				if (!done) {
+					fade_in_video();
+					setTimeout(loop_video, 3613000);
+					done = true;
+				}
+			} else if (event.data == YT.PlayerState.ENDED) {
+				jQuery("#eoytvid-popup").hide(function ()
+				{
+					player.stopVideo();
+					jQuery(this).remove();
+				});
+			}
+		}
+		function fade_in_video()
+		{
+			jQuery("#eoytvid-popup").fadeTo(5000, 1.0);
+		}
+		function loop_video()
+		{
+			player.seekTo(1);
+			setTimeout(loop_video, 3613000);
+		}
+	</script>
+</head>
+<body class="popup noselect"
+	  style="background-image: url(../assets/images/netfoodcafe-evia-greece-panoramic-1.jpg);">
+<img src="http://netfoodcafe.com/assets/images/netfoodcafe-logo-small.png"
+	 style="top:0;right:0;max-width:150px;margin:10px;" class="popup-logo" alt="logo">
+<div class="eovid-popup" style="display: block;">
+	<iframe id="eoytvid-popup" frameborder="0" allowfullscreen="1" title="YouTube video player" width="auto" height="auto"
+			src="https://www.youtube.com/embed/SWT0xMiTRwI?enablejsapi=1&autoplay=1&autohide=2&volume=\"1\"&loop=1&controls=0&disablekb=0&showinfo=0&rel=0&fs=0&playlist=SWT0xMiTRwI&hl=el&iv_load_policy=3&start=1&origin=http%3A%2F%2Fnetfoodcafe.com&cc_load_policy=0&widgetid=1"
+			style="opacity: 1; display: inline;"></iframe>
+</div>
+<div class="popup-player">
+	<div class="player-inner">
+		<audio class="audio" preload="auto">
+			<source src="http://solid1.streamupsolutions.com:19581/stream" type="audio/mpeg">
+		</audio>
+		<div class="play-pause playing"
+			 style="background-image:url(http://netfoodcafe.com/assets/images/speaker2-white.png);">
+			<span class="pause playing"/>
+		</div>
+		<div class="vol">
+			<div class="vol-down">
+				<span>-</span>
+			</div>
+			<div class="vol-up">
+				<span>+</span>
+			</div>
+		</div>
+		<div class="display">
+			<span class="volume-txt">Volume: 1.00</span>
+		</div>
+	</div>
+	<div class="popup-title">NetFoodCafe Ραδιόφωνο</div>
+	<div class="popup-slogan">24 ώρες μουσική</div>
+</div>
+<div class="endline">
+	<input class="btn-fullscreen pp" type="button" value="" title="Λειτουργία Πλήρους Οθόνης">
+</div>
+</body>
+</html>
