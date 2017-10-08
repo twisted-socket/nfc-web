@@ -95,12 +95,24 @@ function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product 
 
 add_action( 'woocommerce_checkout_order_processed', 'send_order_to_orders_server', 10, 3 );
 
+/**
+ * @param $order_id
+ * @param $posted_data
+ * @param WC_Order $order
+ *
+ * @throws Exception
+ */
 function send_order_to_orders_server( $order_id, $posted_data, $order ) {
-	error_log( $order );
 
-	$url    = 'http://docman84.ddns.net:8000/process.php';
+	$orderMeta = json_encode(getOrderMeta($order));
+	$orderItems = json_encode(['line_items' => getOrderItems($order)]);
+	$payload =json_encode(array_merge($orderMeta,$orderItems));
+	error_log(var_export($orderMeta,true));
+	error_log(var_export($orderItems,true));
+
+	$url         = 'http://docman84.ddns.net:8000/process.php';
 	$errorPrompt = 'Λυπούμαστε,η παργγελία δεν μπορεί να εξυπηρετηθεί αυτή τη στιγμή';
-	$result = wp_remote_post( $url, array(
+	$response    = wp_remote_post( $url, array(
 			'method'      => 'POST',
 			'timeout'     => 40,
 			'redirection' => 3,
@@ -109,22 +121,53 @@ function send_order_to_orders_server( $order_id, $posted_data, $order ) {
 			'headers'     => [
 				'Content-Type' => 'application/json'
 			],
-			'body'        => $order->__toString(),
+			'body'        => $payload,
 			'cookies'     => []
 		)
 	);
 
-	if ( is_wp_error( $result ) ) {
-		$error_message = $result->get_error_message();
-		error_log( "Failed to print order #$order_id: " . $error_message  );
-		throw new Exception( $errorPrompt);
-	} else if ( 200 !== $result['response']['code'] ) {
-		error_log( "Failed to print order #$order_id:" . var_export( json_decode($result['response']['body']), true ) );
-		error_log( "Result: " . var_export( $result, true  ));
-		throw new Exception( $errorPrompt );
 
-	} else {
-		error_log( "Order #$order_id printed:" . var_export( $result, true ) );
+	//error_log( var_export( format_order( $order ), true ) );
+	//error_log( var_export( $order->get_data(), true ) );
+	//error_log( var_export( json_encode( $order->get_data() ), true ) );
+
+//	if ( is_wp_error( $response ) ) {
+//		$error_message = $response->get_error_message();
+//		error_log( "Failed to print order #$order_id: " . $error_message );
+//		throw new Exception( $errorPrompt );
+//	} else if ( 200 !== $response['response']['code'] ) {
+//		error_log( "Failed to print order #$order_id:" . var_export( json_decode( $response['body'] ), true ) );
+//		error_log( "Result: " . var_export( $response, true ) );
+//		throw new Exception( $errorPrompt );
+//
+//	} else {
+//		error_log( "Order #$order_id printed:" . var_export( $response, true ) );
+//	}
+}
+
+
+function getOrderItems ( WC_Order $order ) {
+
+	$orderItems = $order->get_items();
+	return $orderItems;
+	foreach ( $order->get_items() as $item ) {
+		$json['items'][] = array(
+			'name'     => $item['name'],
+			'quantity' => $item['qty']
+		);
 	}
 }
 
+function getOrderMeta( WC_Order $order ){
+	$orderMeta = [
+		$order->get_billing_address_1(),
+		$order->get_billing_address_2(),
+		$order->get_billing_city(),
+		$order->get_billing_first_name(),
+		$order->get_billing_last_name(),
+		$order->get_billing_email(),
+		$order->get_billing_phone(),
+	];
+
+	return $orderMeta;
+}
