@@ -94,9 +94,58 @@ function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product 
 }
 
 // Remove the sorting dropdown from Woocommerce
-remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_catalog_ordering', 30 );
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
 // Remove the result count from WooCommerce
-remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_result_count', 20 );
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+
+// Add CSS class to main content opening div
+function sitepoint_base_woocommerce_before_main_content() {
+	if ( is_product() ) {
+		echo '<div class="grid-100 twisted-main-content">';
+	} else {
+		echo '<div class="grid-70 twisted-main-content">';
+	}
+}
+
+// Change "add to cart" button text
+//add_filter( 'woocommerce_product_add_to_cart_text' , 'twisted_woocommerce_product_add_to_cart_text' );
+/**
+ * custom_woocommerce_template_loop_add_to_cart
+ */
+function twisted_woocommerce_product_add_to_cart_text() {
+	global $product;
+
+	if ($product->is_type( 'external' )) {
+		return __( 'Buy product', 'woocommerce' );
+	} elseif ($product->is_type( 'grouped' )) {
+		return __( 'View products', 'woocommerce' );
+	} elseif ($product->is_type( 'simple' )) {
+		return '<i class="fa fa-shopping-basket" aria-hidden="true"></i>';
+		//return __( 'Add to cart', 'woocommerce' );
+	} elseif ($product->is_type( 'variable' )) {
+		return __( 'Select options', 'woocommerce' );
+	} else {
+		return __( 'Read more', 'woocommerce' );
+	}
+}
+
+// Checkout form fields
+add_filter( 'woocommerce_checkout_fields', 'twisted_override_checkout_fields' );
+// Our hooked in function - $fields is passed via the filter!
+function twisted_override_checkout_fields( $fields ) {
+	unset($fields['billing']['billing_company']);
+	unset($fields['billing']['billing_country']);
+	unset($fields['billing']['billing_city']);
+	unset($fields['billing']['billing_state']);
+	unset($fields['billing']['billing_address_2']);
+
+	return $fields;
+}
+
+// Remove pagination
+function sitepoint_base_shop_product_count( $numprods ) {
+	return 250;
+}
 
 
 add_action( 'woocommerce_checkout_order_processed', 'send_order_to_orders_server', 10, 3 );
@@ -110,11 +159,11 @@ add_action( 'woocommerce_checkout_order_processed', 'send_order_to_orders_server
  */
 function send_order_to_orders_server( $order_id, $posted_data, $order ) {
 
-	$orderMeta = json_encode(getOrderMeta($order));
-	$orderItems = json_encode(['line_items' => getOrderItems($order)]);
-	$payload =json_encode(array_merge($orderMeta,$orderItems));
-	error_log(var_export($orderMeta,true));
-	error_log(var_export($orderItems,true));
+	$orderMeta  = json_encode( getOrderMeta( $order ) );
+	$orderItems = json_encode( [ 'line_items' => getOrderItems( $order ) ] );
+	$payload    = json_encode( array_merge( $orderMeta, $orderItems ) );
+	error_log( var_export( $orderMeta, true ) );
+	error_log( var_export( $orderItems, true ) );
 
 	$url         = 'http://docman84.ddns.net:8000/process.php';
 	$errorPrompt = 'Λυπούμαστε,η παργγελία δεν μπορεί να εξυπηρετηθεί αυτή τη στιγμή';
@@ -128,7 +177,7 @@ function send_order_to_orders_server( $order_id, $posted_data, $order ) {
 				'Content-Type' => 'application/json'
 			],
 			'body'        => $payload,
-			'cookies'     => []
+			'cookies'     => [ ]
 		)
 	);
 
@@ -152,9 +201,10 @@ function send_order_to_orders_server( $order_id, $posted_data, $order ) {
 }
 
 
-function getOrderItems ( WC_Order $order ) {
+function getOrderItems( WC_Order $order ) {
 
 	$orderItems = $order->get_items();
+
 	return $orderItems;
 	foreach ( $order->get_items() as $item ) {
 		$json['items'][] = array(
@@ -164,7 +214,7 @@ function getOrderItems ( WC_Order $order ) {
 	}
 }
 
-function getOrderMeta( WC_Order $order ){
+function getOrderMeta( WC_Order $order ) {
 	$orderMeta = [
 		$order->get_billing_address_1(),
 		$order->get_billing_address_2(),

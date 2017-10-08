@@ -93,32 +93,6 @@
 				</div>
 			</header>
 
-			<header id="masthead" class="grid-container site-header" role="banner">
-				<div class="grid-40 tablet-grid-40 site-title">
-					<?php //sitepointbase_the_custom_logo() ?>
-				</div> <!-- /.grid-40.site-title -->
-
-				<div class="grid-60 tablet-grid-60">
-					<nav id="site-navigation" class="main-navigation" role="navigation">
-						<h3 class="menu-toggle assistive-text"><?php esc_html_e( 'Menu', 'sitepoint-base' ); ?></h3>
-						<div class="assistive-text skip-link"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'sitepoint-base' ); ?>"><?php esc_html_e( 'Skip to content', 'sitepoint-base' ); ?></a></div>
-							<?php wp_nav_menu( array( 'theme_location' => 'menu-1', 'menu_class' => 'navigation nav-menu', 'container_class' => 'navigation_container' ) ); ?>
-					</nav> <!-- /.site-navigation.main-navigation -->
-				</div> <!-- /.grid-60 -->
-			</header> <!-- /#masthead.grid-container.site-header -->
-
 		</div> <!-- /#headercontainer -->
 
-		<?php if ( get_header_image() ) { ?>
-			<div id="bannercontainer">
-				<div class="banner grid-container">
-					<div class="header-image grid-100">
-						<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-							<img src="<?php header_image(); ?>" srcset="<?php echo esc_attr( wp_get_attachment_image_srcset( get_custom_header()->attachment_id ) ); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>">
-						</a>
-					</div><!-- .header-image.grid-100 -->
-				</div> <!-- /.banner.grid-container` -->
-			</div> <!-- /#bannercontainer -->
-		<?php } ?>
-
-		<?php do_action( 'sitepointbase_before_woocommerce' ); ?>
+		<?php do_action( 'sitepoint_base_before_woocommerce' ); ?>

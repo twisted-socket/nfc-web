@@ -53,37 +53,75 @@ get_header( 'shop' ); ?>
 
     </header>
 
-		<?php if ( have_posts() ) : ?>
+		<?php
+		// List posts by the terms for a custom taxonomy of any post type
+		$post_type = 'product';
+		$tax = 'product_cat';
+		$tax_terms = get_terms( $tax, 'orderby=name&order=ASC');
+		if ($tax_terms) {
+			foreach ($tax_terms as $tax_term) {
+				$args = array(
+					'post_type'         => $post_type,
+					"$tax"              => $tax_term->slug,
+					'post_status'       => 'publish',
+					'posts_per_page'    => -1,
+					'tax_query' => array(
+						array(
+							'taxonomy' => 'product_cat',
+							'field' => 'id',
+							'terms' => array(17, 37, 57, 60, 76),
+							'operator' => 'NOT IN',
+						),
+					)
+				);
 
-			<?php
-				/**
-				 * woocommerce_before_shop_loop hook.
-				 *
-				 * @hooked wc_print_notices - 10
-				 * @hooked woocommerce_result_count - 20
-				 * @hooked woocommerce_catalog_ordering - 30
-				 */
-				do_action( 'woocommerce_before_shop_loop' );
-			?>
+				$my_query = null;
+				$my_query = new WP_Query($args);
 
-			<?php woocommerce_product_loop_start(); ?>
-
-				<?php woocommerce_product_subcategories(); ?>
-
-				<?php while ( have_posts() ) : the_post(); ?>
+				if( $my_query->have_posts() ) { ?>
 
 					<?php
 						/**
-						 * woocommerce_shop_loop hook.
+						 * woocommerce_before_shop_loop hook.
 						 *
-						 * @hooked WC_Structured_Data::generate_product_data() - 10
+						 * @hooked wc_print_notices - 10
+						 * @hooked woocommerce_result_count - 20
+						 * @hooked woocommerce_catalog_ordering - 30
 						 */
-						do_action( 'woocommerce_shop_loop' );
+						do_action( 'woocommerce_before_shop_loop' );
 					?>
 
-					<?php wc_get_template_part( 'content', 'product' ); ?>
+					<?php woocommerce_product_loop_start(); ?>
 
-				<?php endwhile; // end of the loop. ?>
+						<?php woocommerce_product_subcategories(); ?>
+
+						<table class="products shop_table">
+							<thead>
+								<tr class="table_header">
+									<th colspan="3"><?php echo $tax_term->name; // Group name (taxonomy) ?> <div style="float: right;" class="sign"></div></th>
+								</tr>
+							</thead>
+
+						<?php while ( $my_query->have_posts() ) : $my_query->the_post(); ?>
+
+							<?php
+							/**
+							 * woocommerce_shop_loop hook.
+							 *
+							 * @hooked WC_Structured_Data::generate_product_data() - 10
+							 */
+							do_action( 'woocommerce_shop_loop' );
+							?>
+
+							<?php wc_get_template_part( 'content', 'product' ); ?>
+
+						<?php endwhile; // end of loop ?>
+
+				<?php } // if have_posts()
+					wp_reset_query();
+				} // end foreach #tax_terms
+			} // end if tax_terms
+			?>
 
 			<?php woocommerce_product_loop_end(); ?>
 
@@ -95,19 +133,6 @@ get_header( 'shop' ); ?>
 				 */
 				do_action( 'woocommerce_after_shop_loop' );
 			?>
-
-		<?php elseif ( ! woocommerce_product_subcategories( array( 'before' => woocommerce_product_loop_start( false ), 'after' => woocommerce_product_loop_end( false ) ) ) ) : ?>
-
-			<?php
-				/**
-				 * woocommerce_no_products_found hook.
-				 *
-				 * @hooked wc_no_products_found - 10
-				 */
-				do_action( 'woocommerce_no_products_found' );
-			?>
-
-		<?php endif; ?>
 
 	<?php
 		/**
@@ -124,7 +149,74 @@ get_header( 'shop' ); ?>
 		 *
 		 * @hooked woocommerce_get_sidebar - 10
 		 */
-		do_action( 'woocommerce_sidebar' );
+		//do_action( 'woocommerce_sidebar' );
+		// TWISTED: below the tem mini-cart fix (explicit call)
 	?>
 
-<?php get_footer( 'shop' ); ?>
+	<div class="grid-30 tablet-grid-30 mobile-grid-100 twisted-sidebar">
+		<div id="secondary" class="widget-area" role="complementary">
+			<aside id="woocommerce_widget_cart-3" class="widget woocommerce widget_shopping_cart">
+				<h3 class="widget-title">Καλάθι</h3>
+				<div class="widget_shopping_cart_content">
+
+					<?php
+					do_action( 'woocommerce_before_mini_cart' ); ?>
+
+					<?php if ( ! WC()->cart->is_empty() ) : ?>
+
+						<ul class="woocommerce-mini-cart cart_list product_list_widget <?php //echo esc_attr( $args['list_class'] ); ?>">
+							<?php
+							do_action( 'woocommerce_before_mini_cart_contents' );
+
+							foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+								$_product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+								$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
+
+								if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_widget_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
+									$product_name = apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key );
+									$product_price = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
+									?>
+									<li class="woocommerce-mini-cart-item <?php echo esc_attr( apply_filters( 'woocommerce_mini_cart_item_class', 'mini_cart_item', $cart_item, $cart_item_key ) ); ?>">
+										<?php
+										echo apply_filters( 'woocommerce_cart_item_remove_link', sprintf(
+											'<a href="%s" class="remove" aria-label="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
+											esc_url( WC()->cart->get_remove_url( $cart_item_key ) ),
+											__( 'Remove this item', 'woocommerce' ),
+											esc_attr( $product_id ),
+											esc_attr( $_product->get_sku() )
+										), $cart_item_key );
+
+										echo $product_name . '&nbsp;';
+
+										echo WC()->cart->get_item_data( $cart_item );
+
+										echo apply_filters( 'woocommerce_widget_cart_item_quantity', '<span class="quantity">' . sprintf( '%s &times; %s', $cart_item['quantity'], $product_price ) . '</span>', $cart_item, $cart_item_key ); ?>
+									</li>
+									<?php
+								}
+							}
+
+							do_action( 'woocommerce_mini_cart_contents' );
+							?>
+						</ul>
+
+						<p class="woocommerce-mini-cart__total total"><strong><?php _e( 'Subtotal', 'woocommerce' ); ?>:</strong> <?php echo WC()->cart->get_cart_subtotal(); ?></p>
+
+						<?php do_action( 'woocommerce_widget_shopping_cart_before_buttons' ); ?>
+
+						<p class="woocommerce-mini-cart__buttons buttons"><?php do_action( 'woocommerce_widget_shopping_cart_buttons' ); ?></p>
+
+					<?php else : ?>
+
+						<p class="woocommerce-mini-cart__empty-message"><?php _e( 'No products in the cart.', 'woocommerce' ); ?></p>
+
+					<?php endif; ?>
+
+					<?php do_action( 'woocommerce_after_mini_cart' ); ?>
+
+				</div>
+			</aside>
+		</div>
+	</div>
+
+<?php get_footer( 'shop' );

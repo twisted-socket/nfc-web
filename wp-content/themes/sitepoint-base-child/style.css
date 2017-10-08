@@ -3,3 +3,436 @@
  Template:     sitepoint-base
  Version:      1.0.0
 */
+
+/**************************************************/
+/**************************************************/
+/* NFC MENU STYLES
+.top-bar-cont {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    top: 0;
+    z-index: 10000
+}
+.top-bar-cont.fixed {
+    position: fixed
+}
+.top-bar-cont.fixed .top-bar-upper {
+    display: none
+}
+.top-bar-cont.fixed,
+.top-bar.fixed {
+    height: 50px
+}
+.top-bar {
+    background: #151515;
+    height: 50px
+}
+.top-bar.trans {
+    background: rgba(0, 0, 0, 0.80)
+}
+.top-bar,
+.top-bar-inner {
+    margin: 0 auto
+}
+.top-bar.narrow {
+    width: 980px;
+    padding: 0 15px
+}
+.top-bar.full {
+    width: 100%
+}
+.top-bar-inner.elem-nar {
+    width: 977px
+}
+.top-bar-inner.elem-full {
+    width: 98%
+}
+.top-bar-upper,
+.top-bar-lower {
+    clear: both;
+    width: 100%
+}
+.top-bar-upper {
+    height: 50px
+}
+.top-bar-upper div[class*='emod-languages'] {
+    margin-right: 8px
+}
+.top-bar-upper .network {
+    float: right;
+    height: 50px;
+    margin-left: 5px
+}
+.top-bar-upper .network img,
+.top-bar-upper .network a img {
+    margin: 16px 5px 0;
+    vertical-align: middle
+}
+.top-bar-left,
+.top-bar-right {
+    height: 50px;
+    margin-top: 0
+}
+.top-bar-left {
+    float: left
+}
+.top-bar-right {
+    float: right;
+    font-size: 13px
+}
+.top-bar-home {
+    float: left;
+    padding: 10px
+}
+.top-bar-home img.house,
+.top-bar-home img.custom {
+    position: relative;
+    top: 0
+}
+.top-bar-home img.house {
+    top: 2px;
+    width: 16px;
+    height: 16px
+}
+.top-bar-home img {
+    max-height: 30px
+}
+.top-bar-upper a.syndicate-module img,
+.top-bar-right a.syndicate-module img,
+a[class*='syndicate-modulestyle-dark'] img,
+a[class*='syndicate-modulestyle-black'] img {
+    display: inline;
+    visibility: visible
+}
+.top-bar-upper a.syndicate-module,
+.top-bar-right a.syndicate-module {
+    color: #f1f1f1;
+    padding: 0;
+    background: none
+}
+.top-bar-upper a.syndicate-module span,
+.top-bar-upper a.syndicate-module,
+.top-bar-right a.syndicate-module span,
+.top-bar-right a.syndicate-module {
+    top: -1px
+}
+.top-bar.min-shadow {
+    -webkit-box-shadow: 0 0 2px 0 #000;
+    -moz-box-shadow: 0 0 2px 0 #000;
+    box-shadow: 0 0 2px 0 #000
+}
+.top-bar.max-shadow {
+    -webkit-box-shadow: 0 0 3px 0 #000;
+    -moz-box-shadow: 0 0 3px 0 #000;
+    box-shadow: 0 0 3px 0 #000
+}
+.top-bar ul,
+.main_menu,
+#menus .logout button {
+    list-style: none;
+    margin-left: 0!important
+}
+@media all and (max-width: 1040px) {
+    .top-bar-inner.elem-nar {
+        width: 100%
+    }
+
+    .top-bar-inner.elem-full {
+        width: 97% !important
+    }
+}
+@media all and (max-width: 935px) {
+    .top-bar-inner.elem-full {
+        width: 96% !important
+    }
+    .top-bar-home img.custom {
+        top: 0!important
+    }
+    .top-bar-upper {
+        display: none
+    }
+    .top-bar-cont,
+    .top-bar {
+        height: 50px
+    }
+    .top-bar-cont.fixed {
+        position: static
+    }
+    .top-bar-right {
+        position: absolute;
+        right: 10px
+    }
+    .top-bar-right a.syndicate-module {
+        margin-right: 5px
+    }
+}
+html.go_fullscreen .top-bar-cont,
+html.go_fullscreen .icons,
+html.go_fullscreen footer {
+    display: none
+}
+.main_menu div {
+    display: inline
+}
+
+.main_menu .menu li:hover > ul {
+    display: block
+}
+
+.main_menu {
+    float: left;
+    margin-bottom: 16px;
+    -moz-user-select: -moz-none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none
+}
+
+#menus ul:first-child,
+#menus .logout button,
+#menus .logout button:focus,
+#menus .logout button:active {
+    font-family: 'robotoregular', Roboto, sans-serif, Arial, Helvetica;
+    font-weight: 400
+}
+
+#menus ul,
+.main_menu,
+.main_menu .menu {
+    letter-spacing: 0.5px;
+    float: left;
+    text-transform: none
+}
+
+#menus ul:first-child,
+#menus .logout form button,
+#menus .logout form button:focus,
+#menus .logout form button:active,
+#menus .logout form button *,
+#menus ul,
+.main_menu,
+.main_menu .menu {
+    font-size: 0.900rem
+}
+
+.main_menu,
+#menus .logout button {
+    height: 49px;
+    line-height: 27px
+}
+
+#menus .logout button:focus,
+#menus .logout button:active {
+    border: 0 !important
+}
+
+.main_menu .menu ul {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    z-index: 888
+}
+
+.main_menu .menu ul ul {
+    top: 5px;
+    left: 100%
+}
+
+.main_menu li ul {
+    background: #151515;
+    padding: 0 4px;
+    margin-top: -5px;
+    min-width: 170px;
+    height: auto
+}
+
+.main_menu.trans li ul {
+    background: rgba(0, 0, 0, 0.97)
+}
+
+.main_menu,
+.main_menu li,
+.main_menu li a,
+.main_menu .separator,
+.main_menu span.nav-header,
+#menus .logout button {
+    white-space: nowrap
+}
+
+.main_menu li a,
+.main_menu .separator,
+.main_menu span.nav-header,
+#menus .logout button {
+    color: #ddd;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    position: relative
+}
+
+.main_menu li:hover a:hover,
+.main_menu li:hover .separator:hover,
+#menus .logout button:hover {
+    background-color: transparent;
+    color: #999;
+    -webkit-transition: color 200ms linear;
+    -moz-transition: color 200ms linear;
+    -ms-transition: color 200ms linear;
+    -o-transition: color 200ms linear;
+    transition: color 200ms linear
+}
+
+.main_menu li .deeper.parent,
+.main_menu li .deeper.parent:hover {
+    background-color: rgba(50, 50, 50, 0.98);
+    background: url('/assets/images/menu-arrow.png') no-repeat right center
+}
+
+#menus .logout button {
+    top: -1px;
+    background: none;
+    border: none
+}
+
+#menus .logout button,
+.footer-inner .logout button {
+    color: #DE0000
+}
+
+#menus.clicked,
+#menus li.clicked.deeper.parent > ul,
+#menus li.clicked > ul {
+    display: block;
+    visibility: visible
+}
+.main_menu,
+.main_menu li,
+.main_menu li a,
+.main_menu .separator,
+.main_menu span.nav-header,
+#menus .logout button {
+    text-shadow: none
+}
+.main_menu.min-shadow li ul {
+    -webkit-box-shadow: 0 0 1px 0 #151515;
+    -moz-box-shadow: 0 0 1px 0 #151515;
+    box-shadow: 0 0 1px 0 #151515
+}
+
+.main_menu.max-shadow li ul {
+    -webkit-box-shadow: 0 0 3px 0 #151515;
+    -moz-box-shadow: 0 0 3px 0 #151515;
+    box-shadow: 0 0 3px 0 #151515
+}
+
+/**************************************************/
+/**************************************************/
+/* E-SHOP STYLES */
+h1, h1.page-title, h2, h3, h4, h5, h6, article.sticky .featured-post {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+h1.page-title,
+.widget_shopping_cart h3,
+.cart_totals h2{
+    font-size: 2rem;
+}
+
+#customer_details h3,
+h3#order_review_heading,
+#order_review h3,
+h2.product_list_cat_name {
+    font-size: 1rem;
+}
+
+.shop_table .table_header {
+    cursor: pointer;
+}
+.shop_table .table_header .sign:after {
+    content: "\25bc";
+    display: inline-block;
+}
+.shop_table .table_header.expand .sign:after {
+    content: "\25b2";
+}
+.shop_table span.title {
+    display: none !important;
+}
+
+.widget-area a {
+    padding: 0 !important;
+}
+
+.woocommerce-additional-fields {
+    margin: 3%;
+}
+
+.woocommerce form .form-row .required {
+    text-decoration: none;
+}
+
+.archive-title, .page-title, .entry-content th, .comment-content th {
+    text-transform: none;
+}
+
+table.products {
+    width: 100%;
+}
+
+table.products tr {
+    height: 50px;
+}
+
+table.products .quantity {
+    float: left;
+    margin-right: 10px;
+}
+
+.woocommerce-loop-product__title {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.twisted-main-content, .twisted-sidebar {
+    padding: 30px 30px 0;
+}
+
+.footer-max {
+    margin-top: 30px;
+}
+
+.cart button.button.alt {
+    background-color: #444;
+    border-radius: 0;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.cart button.button.alt:hover {
+    background-color: #222;
+}
+
+.woocommerce a.remove {
+    color: #444 !important;
+}
+
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button {
+    background-color: #444;
+}
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover {
+    background-color: #222;
+}
+
+#billing_phone_field,
+#billing_email_field {
+    width: 100%;
+}
+
+.woocommerce-mini-cart__buttons a.button.wc-forward {
+    padding: 10px !important;
+}
