@@ -93,6 +93,12 @@ function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product 
 	return $html;
 }
 
+// Remove the sorting dropdown from Woocommerce
+remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_catalog_ordering', 30 );
+// Remove the result count from WooCommerce
+remove_action( 'woocommerce_before_shop_loop' , 'woocommerce_result_count', 20 );
+
+
 add_action( 'woocommerce_checkout_order_processed', 'send_order_to_orders_server', 10, 3 );
 
 /**
