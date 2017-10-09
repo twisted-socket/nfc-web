@@ -11,7 +11,7 @@
  */
 ?>
 
-	<?php do_action( 'sitepointbase_after_woocommerce' ); ?>
+	<?php do_action( 'sitepoint_base_after_woocommerce' ); ?>
 	<div id="footercontainer">
 
 		<footer class="footer-max">
@@ -141,6 +141,14 @@
 			ga('create', 'UA-82691314-1', 'netfoodcafe.com');
 			ga('set', 'forceSSL', true);
 			ga('send', 'pageview');
+		</script>
+
+		<script type="application/javascript">
+			jQuery(document).ready(function() {
+				jQuery('.shop_table .table_header').click(function () {
+					jQuery(this).toggleClass('expand').parent().next().children().slideToggle(100);
+				});
+			});
 		</script>
 
 		<?php //get_sidebar( 'footer' ); ?>
